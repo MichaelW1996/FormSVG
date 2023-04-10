@@ -23,7 +23,7 @@ const questions = [
   },
 ];
 
-function datachecker(response) {
+function textdatachecker(response) {
   let text = response.LogoText;
   if (text.length <= 3 && text.length != 0) {
     console.log(`text is ${text}`);
@@ -34,35 +34,36 @@ function datachecker(response) {
     );
   } //setup error
 
+  //run the colourchecker
+  function colourLogic(input) {
+    var colourReply = colourCheck.initalCheck(input);
+    if (colourReply != "Not a valid colour") {
+      //if the colour is valid
+      console.log(`${colourReply} text colour`);
+      var OppColourReply = colourCheck.colourOpposite(colourReply);
+      console.log(`${OppColourReply} contrast colour`);
+    } else {
+      //Not a colour
+      console.log("Not a colour");
+      return init() + console.log("Not a colour");
+    }
+  }
   let Tcolour = response.TextColour;
+  colourLogic(Tcolour);
   //need to check if colour is valid?
-  console.log(`Text colour is ${Tcolour}`);
   let Shape = response.LogoShape; //nothing to check
   console.log(`Shape is ${Shape}`);
 }
 
 function init() {
   inquirer.prompt(questions).then((data) => {
-    datachecker(data);
+    textdatachecker(data);
   });
 }
 
-//run the colourchecker
-function colourLogic(input) {
-  var colourReply = colourCheck.initalCheck(input);
-  if (colourReply != "Not a valid colour") {
-    //if the colour is valid
-    console.log(colourReply);
-    var OppColourReply = colourCheck.colourOpposite(colourReply);
-    console.log(OppColourReply);
-  } else {
-    //Not a colour
-    console.log("Not a colour");
-  }
-}
-
-colourLogic("blue");
+// colourLogic("blue");
 //get the opposite
 // console.log(`${colourCheck.HexCodeColour} this should be the answer`);
-// init();
 // console.log(`${colourCheck.testvar} Stupid things`);
+
+init();
