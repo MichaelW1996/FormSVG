@@ -4,9 +4,9 @@
 
 Using a basic form to create an SVG file with the user defined text, colour and shape.
 
-Video of use in current format can be found here:
+Video of use in current format can be found here: https://drive.google.com/file/d/1Mn58Fk-Ppya-Ibpu5Kj-r-fq4_qD_AMz/view
 
-Video of use can be found at (With automated contrast colour): https://drive.google.com/file/d/1d0DPzx9GJr1Pi21vO89t05AimolLy8Ea/view
+Video of use can be found at (With automated contrast shape colour): https://drive.google.com/file/d/1d0DPzx9GJr1Pi21vO89t05AimolLy8Ea/view
 
 ## Contents
 
