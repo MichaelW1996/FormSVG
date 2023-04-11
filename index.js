@@ -1,5 +1,7 @@
 const inquirer = require("inquirer"); //inquirer from npm
+const fs = require("fs");
 const colourCheck = require("./lib/colourCheck");
+const { Triangle, Circle, Rectangle } = require("./lib/shapes");
 
 const questions = [
   {
@@ -23,46 +25,62 @@ const questions = [
   },
 ];
 
-function datachecker(response) {
-  let text = response.LogoText;
-  if (text.length <= 3 && text.length != 0) {
-    console.log(`text is ${text}`);
-  } else {
-    //stop the checker
-    return (
-      console.log("error, Text input not valid, please try again") + init()
-    );
-  } //setup error
-
-  let Tcolour = response.TextColour;
-  //need to check if colour is valid?
-  console.log(`Text colour is ${Tcolour}`);
-  let Shape = response.LogoShape; //nothing to check
-  console.log(`Shape is ${Shape}`);
-}
-
-function init() {
-  inquirer.prompt(questions).then((data) => {
-    datachecker(data);
-  });
-}
-
-//run the colourchecker
+var ContrastColour = "";
+var colourReply = "";
 function colourLogic(input) {
-  var colourReply = colourCheck.initalCheck(input);
+  //take the input colour
+  colourReply = colourCheck.initalCheck(input); //send it to the checker
   if (colourReply != "Not a valid colour") {
     //if the colour is valid
-    console.log(colourReply);
-    var OppColourReply = colourCheck.colourOpposite(colourReply);
-    console.log(OppColourReply);
+    ContrastColour = colourCheck.colourOpposite(colourReply); //generate the opposite of the colour
   } else {
-    //Not a colour
-    console.log("Not a colour");
+    //if the colour is invalid, throw an error
+    throw new Error("Not a valid colour, Try again");
   }
 }
 
-colourLogic("blue");
-//get the opposite
-// console.log(`${colourCheck.HexCodeColour} this should be the answer`);
-// init();
-// console.log(`${colourCheck.testvar} Stupid things`);
+function textdatachecker(response) {
+  let text = response.LogoText;
+  if (text.length > 3 || text.length == 0) {
+    throw new Error(
+      "Text input not valid, please try again with text of 1-3 characters."
+    );
+  }
+
+  //run the colourchecker
+  let Tcolour = response.TextColour;
+  colourLogic(Tcolour);
+
+  let Shape = response.LogoShape; //nothing to check
+  switch (Shape) {
+    case "Circle":
+      GeneratedHTML = new Circle(text, colourReply, ContrastColour);
+      break;
+    case "Triangle":
+      GeneratedHTML = new Triangle(text, colourReply, ContrastColour);
+      break;
+    case "Rectangle":
+      GeneratedHTML = new Rectangle(text, colourReply, ContrastColour);
+      break;
+    default:
+      throw new Error("Somthing went wrong");
+  }
+  MakeFile();
+}
+
+function init() {
+  //ask the question then use the data
+  inquirer.prompt(questions).then((data) => {
+    textdatachecker(data); //start the data checking
+  });
+}
+
+const MakeFile = function () {
+  fs.writeFile("./examples/logo.svg", GeneratedHTML.render(), (err) => {
+    if (err) throw new Error("Error creating file");
+
+    console.log("Generated logo.svg"); //confirmation message
+  });
+};
+
+init(); //make it start when the index.js is run using npm start
